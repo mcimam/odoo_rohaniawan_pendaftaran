@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="custom_institution_rohaniawan_view_tree" model="ir.ui.view">
+        <field name="name">rohaniawan.institution.view.tree</field>
+        <field name="model">rohaniawan.institution</field>
+        <field name="arch" type="xml">
+            <tree string="Institution" editable="bottom" create="True">
+                <field name="name"/>
+                <field name="initial"/>
+                <field name="code" />
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="action_rohaniawan_institution" model="ir.actions.act_window">
+        <field name="name">Institution</field>
+        <field name="res_model">rohaniawan.institution</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+
+</odoo>

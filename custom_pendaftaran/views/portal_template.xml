@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="portal_my_home" name="portal_my_home_inherit" inherit_id="portal.portal_my_home">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="icon" t-value="'/portal/static/src/img/portal-connection.svg'"/>
+                <t t-set="title">Registration</t>
+                <t t-set="text">See registration status</t>
+                <t t-set="url" t-value="'/my/regis'"/>
+                <t t-set="config_card" t-value="True"/>
+            </t>
+        </xpath>
+
+    </template>
+
+
+    <template id="portal_my_home_menu_regis" name="Portal layout : regis menu entries" inherit_id="portal.portal_breadcrumbs">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'regis'" t-attf-class="breadcrumb-item #{'active ' if not registrations else ''}">
+                <a t-if="registration" t-attf-href="/my/regis?{{ keep_query() }}">Registration</a>
+                <t t-else="">Registration</t>
+            </li>
+        </xpath>
+
+    </template>
+
+    <template id="portal_my_regis" name="my_card_registration">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Your Registration</t>
+            </t>
+
+
+            <t t-if="success_msg">
+                <div class="alert alert-success" role="alert">
+                    <t t-out="success_msg"/>
+                </div>
+            </t>
+
+            <t t-if="registrations">
+                <button class="btn btn-primary" type="button" onclick="location.href='/my/regis/new'">
+                    Create New Registration
+                </button>
+                <t t-call="portal.portal_table">
+
+                    <thead>
+                        <tr class="active">
+                            <th>Register No</th>
+                            <th>Register At</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="registrations" t-as="registration">
+                            <tr >
+                                <td>
+                                    <a t-att-href="registration.get_portal_url()" t-att-title="registration.name">
+                                        <t t-out="registration.name" />
+                                    </a>
+                                </td>
+                                <td>
+                                    <t t-out="registration.create_date" />
+                                </td>
+                                <td>
+                                    <t t-out="registration.state" />
+                                </td>
+                                <td>
+                                    <t t-if="registration.state == 'approved'">
+                                        <a t-att-href="registration.get_card_url()">
+                                            Download
+                                        </a>
+                                    </t>
+                                    <t t-elif="registration.state not in ('approved','rejected')">
+                                        <a t-att-href="registration.delete_registration()">
+                                            Delete
+                                        </a>
+                                    </t>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </t>
+            </t>
+            <t t-else="">
+                <div class="alert alert-warning" role="alert">
+                    There are currently no registrations for your account.
+                </div>
+                <button class="btn btn-primary" type="button" onclick="location.href='/my/regis/new'">
+                    Create New Registration
+                </button>
+            </t>
+        </t>
+    </template>
+
+    <template id="portal_my_regis_new" name="portal_my_regis_new">
+        <t t-call="portal.portal_layout">
+            <div class="w-md-75 w-lg-50 pb-5">
+                <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+                <t t-call="portal.portal_searchbar">
+                    <t t-set="title">New Registration</t>
+                </t>
+
+                <section>
+                    <div class="container">
+                        <h4>Register New Card</h4>
+                        <form action="/my/regis" method="post" role="form" class="oe_form" enctype="multipart/form-data">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                            <div class="mb-3">
+                                <label for="rname">Name:</label>
+                                <input type="text" class="form-control form-control-sm" id="rname" name="rname" required="required" t-att-value="rname"/>
+                                <div class="invalid-feedback"></div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="vname">Visudhi:</label>
+                                <input type="text" class="form-control form-control-sm" id="vname" name="vname" required="required"/>
+                                <div class="invalid-feedback"></div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="gender">Gender:</label>
+                                <select class="form-control form-control-sm" id="gender" name="gender" required="required">
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="nationality">Nationality:</label>
+                                <select class="form-control form-control-sm" id="nationality" name="nationality" required="required">
+                                    <t t-foreach="countries" t-as="country">
+                                        <option t-att-value="country.id" t-att-selected="country.name == 'Indonesia'">
+                                            <t t-out="country.name"/>
+                                        </option>
+                                    </t>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="nationality">Institution:</label>
+                                <select class="form-control form-control-sm" id="institution" name="institution" required="required">
+                                    <t t-foreach="institutions" t-as="institution">
+                                        <option t-att-value="institution.id">
+                                            <t t-out="institution.name"/>
+                                        </option>
+                                    </t>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="level">Level:</label>
+                                <select class="form-control form-control-sm" id="level" name="level" required="required">
+                                    <option value="bhikkhu">Bhikkhu/Bhikkhuni</option>
+                                    <option value="lama">Lama/Acariya/Renpoche</option>
+                                    <option value="padita">Padita</option>
+                                    <option value="rohaniawan">Rohaniawan</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="address">Address:</label>
+                                <input type="text" class="form-control form-control-sm" id="address" name="address" required="required"/>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="city">City:</label>
+                                <input type="text" class="form-control form-control-sm" id="city" name="city" required="required"/>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="province">Province:</label>
+                                <input type="text" class="form-control form-control-sm" id="province" name="province" required="required"/>
+                            </div>
+
+                            <!-- KTP/PASPORT -->
+                            <label for="ktp">KTP / Paspor:</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-text">
+                                    <input type="file" class="form-control form-control-sm" id="ktp" name="ktp" accept="image/*"/>
+                                </div>
+                                <input type="text" class="form-control form-control-sm" id="nik" name="nik" placeholder="NIK/Passport No" aria-label="nik" required="required"/>
+                            </div>
+
+                            <label class="form-label">Place and date of birth:</label>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control form-control-sm" placeholder="Place of birth" aria-label="pob" name="pob"/>
+                                <span class="input-group-text">,</span>
+                                <input type="date" class="form-control form-control-sm" placeholder="Date of birth" aria-label="dob" name="dob"/>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="surat_pemohon">Letter of applicant:</label>
+                                <input type="file" class="form-control form-control-sm" id="surat_pemohon" name="surat_pemohon" accept="application/pdf"/>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="surat_bukti">Certificate of clergy:</label>
+                                <input type="file" class="form-control form-control-sm" id="surat_bukti" name="surat_bukti" accept="application/pdf"/>
+                            </div>
+
+
+                            <div class="mb-3">
+                                <label for="pas_foto">Photo:</label>
+                                <input type="file" class="form-control form-control-sm" id="pas_foto" name="pas_foto" accept="image/*"/>
+                            </div>
+
+                            <button type="submit" class="btn btn-secondary">Register</button>
+                        </form>
+                    </div>
+
+                </section>
+            </div>
+        </t>
+
+    </template>
+
+</odoo>

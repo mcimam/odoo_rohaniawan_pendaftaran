@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="custom_pendaftaran_rohaniawan_main_menu" name="Rohaniawan" sequence="10">
+        <menuitem id="custom_pendaftaran_rohaniawan_menu" name="Rohaniawan" sequence="10" action="action_custom_pendaftaran_rohaniawan"/>
+        <menuitem id="custom_pendaftaran_institusi_menu" name="Institution" sequence="20" action="action_rohaniawan_institution"/>
+    </menuitem>
+
+</odoo>

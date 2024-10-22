@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="custom_pendaftaran_rohaniawan_view_tree" model="ir.ui.view">
+        <field name="name">rohaniawan.pendaftaran.view.tree</field>
+        <field name="model">rohaniawan.pendaftaran</field>
+        <field name="arch" type="xml">
+            <tree string="">
+                <field name="name"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="custom_pendaftaran_rohaniawan_view_form" model="ir.ui.view">
+        <field name="name">rohaniawan.pendaftaran.view.form</field>
+        <field name="model">rohaniawan.pendaftaran</field>
+        <field name="arch" type="xml">
+            <form string="">
+                <header>
+                    <button string="Submit" name="action_submit" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                    <button string="Approve" name="action_approve" type="object" class="oe_highlight" invisible="state != 'postponed'"/>
+                    <button string="Reject" name="action_reject" type="object" invisible="state != 'postponed'"/>
+                    <button string="Revert" name="action_revert_to_draft" type="object" invisible="state == 'draft'"/>
+
+                    <field name="state" widget="statusbar" statusbar_visible="draft,postponed,approved"/>
+                </header>
+                <sheet>
+                    <field name="avatar" widget="image" class="oe_avatar" options="{'preview_image': 'avatar_128'}"/>
+
+                    <div class="oe_title mb24">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                        <group>
+                            <field name="partner_id" readonly="1"/>
+                        </group>
+                    </div>
+                    <group>
+                        <group name="general" string="Information">
+                            <field name="rname"/>
+                            <field name="vname" />
+                            <field name="pob" />
+                            <field name="dob" />
+                            <field name="level" />
+                            <field name="classification" />
+                            <field name="institution" />
+
+                            <field name="valid_till" required="state=='approved'"/>
+                            <field name="submitter_id" string="Pengusul" readonly="1"/>
+
+                        </group>
+                        <group name="address" string="Address">
+                            <field name="address" widget="text"/>
+                            <field name="city" />
+                            <field name="province" />
+                            <field name="nationality" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="card" string="Card">
+                            <field name="card_number" />
+                            <field name="card" required="state=='approved'" widget="pdf_viewer"/>
+                        </page>
+                        <page name="document" string="Document">
+                            <group name="ktp" string="Identity">
+                                <field name="ktp" widget="image"/>
+                                <field name="nik" />
+                            </group>
+                            <group name="surat" string="Letter">
+                                <field name="surat_pemohon" widget="pdf_viewer"/>
+                                <field name="surat_bukti" widget="pdf_viewer"/>
+                            </group>
+                        </page>
+                        <page name="signature" string="Signature">
+                            <group name="signature">
+                                <field name="verifier_id" required="state=='approved'"/>
+                                <field name="verifier_signature" widget="signature" readonly="1" />
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_custom_pendaftaran_rohaniawan" model="ir.actions.act_window">
+        <field name="name">Rohaniawan</field>
+        <field name="res_model">rohaniawan.pendaftaran</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+</odoo>

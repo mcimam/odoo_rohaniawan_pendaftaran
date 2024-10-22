@@ -1,0 +1,4 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_custom_pendaftaran_rohaniawan","access.custom.pendaftaran.rohaniawan","model_rohaniawan_pendaftaran","base.group_user",1,1,1,1
+"access_custom_pendaftaran_rohaniawan_portal","access.custom.pendaftaran.rohaniawan.portal","model_rohaniawan_pendaftaran","base.group_portal",1,0,1,0
+"access_custom_pendaftaran_institution","access.custom.pendaftaran.institution","model_rohaniawan_institution","base.group_user",1,1,1,1
